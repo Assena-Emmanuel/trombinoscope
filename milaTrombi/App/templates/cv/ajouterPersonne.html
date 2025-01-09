@@ -7,36 +7,37 @@
 {% block content %}
     <div class="text-center" style="margin-top: 2em;">
         <h2>
-            <strong>NOUVEL</strong> Personne
+            <strong class="text-primary">NOUVEL</strong> Personne {% if error %} {{error}} {% endif %}
         </h2>
     </div>
     <div class="container" style="display: flex; justify-content: center;">
         
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action="{% url 'ajouterPersonne' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
         <div style="border: 1px solid #716f6f; min-width: 350px; margin-top: 1em; padding:5px 20px;">
             <div class="row">
                 <div class="col-sm-4" style="height: 250px; display: flex; justify-content: center; align-items: center;">
                     <div class="picture-container">
                         <div class="picture">
                             <img src="{% static 'assets/img/default-avatar.png' %}" class="picture-src" id="wizardPicturePreview" title=""/>
-                            <input type="file" id="wizard-picture">
+                            <input type="file" required name="photo" id="wizard-picture">
                         </div>
-                        <h6>Choose Picture</h6>
+                        <h6>Ajouter Photo</h6>
                     </div>
                 </div>
                 <div class="col-sm-8" style="">
                     
                         <div class="form-group">
                             <label>Nom</label>
-                            <input name="nom" type="text" class="form-control" placeholder="Votre Nom...">
+                            <input name="nom" type="text" class="form-control" required placeholder="Votre Nom...">
                         </div>
                         <div class="form-group">
                             <label>Prenom(s)</label>
-                            <input name="prenoms" type="text" class="form-control" placeholder="Votre Prenoms...">
+                            <input name="prenoms" type="text" class="form-control" required placeholder="Votre Prenoms...">
                         </div>
                         <div class="form-group">
                             <label>Adresse</label>
-                            <input name="adresse" type="text" class="form-control" placeholder="Ex: Côte d'ivoire / Abidjan / Abobo">
+                            <input name="adresse" type="text" class="form-control" required placeholder="Ex: Côte d'ivoire / Abidjan / Abobo">
                         </div>
                     
                 </div>
@@ -45,13 +46,13 @@
                 <div class="col-sm-4" >
                     <div class="form-group">
                         <label>Telephone</label>
-                        <input name="telephone" type="text" class="form-control" placeholder="Votre Nom...">
+                        <input name="telephone" type="text" class="form-control" required placeholder="Votre Nom...">
                     </div>
                 </div>
                 <div class="col-sm-8" style="">
                     <div class="form-group">
                         <label>E-mail</label>
-                        <input name="email" type="email" class="form-control" placeholder="exemple@gmail.com">
+                        <input name="email" type="email" class="form-control" required placeholder="exemple@gmail.com">
                     </div>
                 </div>
             </div>
@@ -59,13 +60,13 @@
                 <div class="col-sm-6" >
                     <div class="form-group" style="">
                         <label>Mot de passe</label>
-                        <input name="mdp" id="mdp" type="password" class="form-control">
+                        <input name="mdp" id="mdp" required type="password" class="form-control">
                     </div>
                 </div>
                 <div class="col-sm-6" style="">
                     <div class="form-group">
                         <label>Confirmer Mot de passe</label>
-                        <input name="cmdp" id="cmdp" type="password" class="form-control">
+                        <input name="cmdp" id="cmdp" required type="password" class="form-control">
                     </div>
                 </div>
                 <div style="padding: 4px 35px;"><input onchange="show()" type="checkbox" class=""> Affiher mot de passe</div>

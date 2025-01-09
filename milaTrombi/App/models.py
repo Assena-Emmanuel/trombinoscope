@@ -14,12 +14,13 @@ class Personne(AbstractUser):
     photo = models.ImageField(upload_to="photos/")
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nom', 'prenom', 'telephone', 'adresse', 'photo']
+    REQUIRED_FIELDS = ['nom', 'prenom', 'telephone',]
 
 class Cv(models.Model):
     poste = models.CharField(max_length=225)
     description = models.TextField()
-    persone = models.ForeignKey(Personne, on_delete=models.CASCADE)
+    photo = models.ImageField(upload_to="cvPhoto/", null=True)
+    personne = models.ForeignKey(Personne, on_delete=models.CASCADE)
 
 class Formation(models.Model):
     cv = models.ForeignKey(Cv, on_delete=models.CASCADE)
@@ -29,13 +30,13 @@ class Formation(models.Model):
 
 class Loisir(models.Model):
     cv = models.ForeignKey(Cv, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    description = models.TextField()
+    loisirs = models.CharField(max_length=255)
 
 class ExperienceProfessionnelle(models.Model):
     cv = models.ForeignKey(Cv, on_delete=models.CASCADE)
     job_titre = models.CharField(max_length=255)
     entreprise = models.CharField(max_length=255)
+    localite = models.CharField(max_length=255, null=True)
     periode = models.CharField(max_length=50)
     description = models.TextField()
 
