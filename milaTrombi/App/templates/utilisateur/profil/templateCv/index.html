@@ -1,0 +1,33 @@
+{% extends 'utilisateur/profil/base.html' %}
+{% load static %}
+{% block contente %}
+
+<div class="head-title">
+    <div class="left">
+        <h1>Choix du modele de CV</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 d-flex justify-content-center align-items-center">
+        <div class="card w-100 rounded-3 border-0 d-flex justify-content-center align-items-center" >
+          <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+            <img src="{% static 'formatCv/imgCV/0.png' %}" width="100%" alt="">
+          </div>
+        </div>
+    </div>
+      
+    <div class="col-md-4 d-flex justify-content-center align-items-center" >
+        <div class="card w-100 rounded-3 border-0 d-flex justify-content-center align-items-center" style="height: 350px;">
+            <img src="{% static 'assets/img/default-avatar.png' %}" width="200" alt="">
+        </div>
+    </div>
+    <div class="col-md-4 d-flex justify-content-center align-items-center">
+        <div class="card w-100 rounded-3 border-0 d-flex justify-content-center align-items-center" style="height: 350px;">
+            <img src="{% static 'assets/img/default-avatar.png' %}" width="200" alt="">
+        </div>
+    </div>
+</div>
+  
+  
+
+{% endblock %}

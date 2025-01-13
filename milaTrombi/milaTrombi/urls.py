@@ -19,6 +19,11 @@ urlpatterns = [
     path('connexion/',views.connexion, name='connexion'),
     path('deconnexion/',views.deconnexion, name='deconnexion'),
     path('profil-user/',views.profil, name='profil'),
+    path('user/format-cv',views.selectTemplate, name='format-cv'),
+
+
+
+    path('format/',views.format, name='format'),
 ]
 
 if settings.DEBUG:  # new

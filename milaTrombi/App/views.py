@@ -251,4 +251,13 @@ def deconnexion(request):
 
 @login_required
 def profil(request):
-    return render(request, "utilisateur/profil/index.html")
+    return render(request, "utilisateur/profil/home.html")
+
+@login_required
+def selectTemplate(request):
+    return render(request, "utilisateur/profil/templateCv/index.html")
+
+
+
+def format(request):
+    return render(request, "formatCv/defaut.html")

@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -12,10 +12,10 @@
 </head>
 
 <body>
-    <section class="main-section">
+    <section class="main-section" style="margin-top: 5em 0;">
         <div class="left-part">
             <div class="photo-container">
-                <img src="profile.jpg" alt="">
+                <img src="{% static 'assets/img/default-avatar.png' %}" alt="">
             </div>
             <div class="contact-container">
                 <h2 class="title">Contact Me</h2>
@@ -65,11 +65,7 @@
                     <h5 class="college-name">University/College Details</h5>
                     <p class="education-date">2006 - 2008</p>
                 </div>
-                <div class="course">
-                    <h2 class="education-title">Course Studied</h2>
-                    <h5 class="college-name">University/College Details</h5>
-                    <p class="education-date">2006 - 2008</p>
-                </div>
+                
             </div>
 
             <div class="skills-container">
@@ -114,16 +110,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="skill">
-                    <div class="left-skill">
-                        <p>Skill Name 04</p>
-                    </div>
-                    <div class="right-skill">
-                        <div class="outer-layer">
-                            <div class="inner-layer" style="width: 70%;"></div>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
         <div class="right-part">
@@ -177,7 +164,7 @@
                 </div>
             </div>
 
-            <div class="references-container">
+            <!-- <div class="references-container">
                 <h2 class="title text-left">References</h2>
                 <div class="references">
                     <div class="left-references">
@@ -209,7 +196,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </section>
 
