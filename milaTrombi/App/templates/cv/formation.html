@@ -7,7 +7,7 @@
         <h2><b style="font-size: 2em;"><span class="text-primary">Formations suivies</span> </b></h2>
     </div>
     <div class="container" style="display: flex; justify-content: center;">
-        <form action="{% url 'description' personnde_id=1 %}" method="post">
+        <form action="{% url 'formation' %}" method="post">
             {% csrf_token %}
             <div class="" style="border: 1px solid #45499d; padding: 20px; margin-top: 3em; width: 700px;">
                 <div id="container">

@@ -126,5 +126,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+AUTHENTICATION_BACKENDS = ['App.backends.EmailBackend']
 
+LOGIN_URL = '/connexion/'
 AUTH_USER_MODEL = 'App.Personne'

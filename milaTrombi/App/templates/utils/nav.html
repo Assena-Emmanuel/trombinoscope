@@ -1,7 +1,7 @@
 <style>
     #head{
         display: flex; 
-        justify-content: end;
+        justify-content:space-between;
         align-items: center;
         margin: 0 32px;
         height: 60px;
@@ -22,11 +22,20 @@
     }
 </style>
 <div id="head">
+    {% if user.is_authenticated %}
+        <div class="picture-container">
+            <div class="picture">
+                <img src="" class="picture-src" id="wizardPicturePreview" title=""/>
+            </div>
+            <h6>{{ user.email }}</h6>
+        </div>
+    {% endif %}
+    
     <nav>
         <ul>
             <li><a class="link" href="">accueil</a></li>
-            <li><a class="link" href="">s'inscrire</a></li>
-            <li><a class="link" href="">se connecter</a></li>
+            <li><a class="link" href="{% url 'ajouterPersonne' %}">s'inscrire</a></li>
+            <li><a class="link" href="{% url 'connexion' %}">se connecter</a></li>
         </ul>
     </nav>
 </div>

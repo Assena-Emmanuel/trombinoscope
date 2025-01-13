@@ -17,6 +17,7 @@ urlpatterns = [
     path('langue/',views.langue, name='langue'),
     path('loisirs/',views.loisirs, name='loisirs'),
     path('connexion/',views.connexion, name='connexion'),
+    path('deconnexion/',views.deconnexion, name='deconnexion'),
     path('profil-user/',views.profil, name='profil'),
 ]
 

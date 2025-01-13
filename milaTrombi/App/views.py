@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Personne, Cv, Loisir, Competence, ExperienceProfessionnelle, Formation
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login, logout, authenticate
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def showCv(request):
@@ -18,23 +20,40 @@ def ajouterPersonne(request):
         cmdp = request.POST.get('cmdp')
         photo = request.FILES.get('photo')
 
-        # verifier si les deux mots de passe sont identique
-        if mdp != cmdp:
+        # Vérifier si tous les champs obligatoires sont remplis
+        if not all([nom, prenoms, telephone, email, adresse, mdp, cmdp]):
+            messages.error(request, "Tous les champs doivent être remplis.")
             return redirect('ajouterPersonne')
-        
-        # Enregistrer la personne 
-        personne = Personne.objects.create_user(
-            nom=nom,
-            prenom=prenoms,
-            telephone=telephone,
-            adresse=adresse,
-            email=email,
-            photo=photo
-        )
-        return redirect('description', personnde_id=personne.id)
 
-    else:
-        return render(request, 'cv/ajouterPersonne.html')
+        # Vérifier si les deux mots de passe sont identiques
+        if mdp != cmdp:
+            messages.error(request, "Les mots de passe ne correspondent pas.")
+            return redirect('ajouterPersonne')
+
+        # Enregistrer la personne
+        try:
+            personne = Personne.objects.create_user(
+                nom=nom,
+                prenom=prenoms,
+                telephone=telephone,
+                adresse=adresse,
+                email=email,
+                photo=photo,
+            )
+            # Définir et sécuriser le mot de passe
+            personne.set_password(mdp)
+            personne.save()
+
+            # Connecter automatiquement l'utilisateur
+            login(request, personne)
+
+            # Redirection après création
+            return redirect('description', personne_id=personne.id)
+        except Exception as e:
+            messages.error(request, f"Une erreur s'est produite : {str(e)}")
+            return redirect('ajouterPersonne')
+
+    return render(request, 'cv/ajouterPersonne.html')
     
 
 def description(request, personnde_id):
@@ -51,20 +70,26 @@ def description(request, personnde_id):
 
         # Garder l'id du cv en session 
         request.session["cv_id"] = cv.id
+        return redirect('formation')
 
     else:
+        user_id = request.session.get("user")
+        if not user_id:
+            redirect("ajouterPersonne")
         return render(request, 'cv/description.html')
     
 
 def formation(request):
+    # Reccuperer l'id du cv gardé en session
+    cv = request.session.get("cv_id")
+    user_id = request.session.get("user")
+
     if request.method == "POST":
         etablissement = request.POST.getlist('etablissement')
         diplome = request.POST.getlist('diplome')
         periode = request.POST.getlist('periode')
-        
-        # Reccuperer l'id du cv gardé en session
-        cv = get_object_or_404(Cv, id=request.session.get('cv_id'))
 
+        cv = get_object_or_404(Cv, id=cv)
         # enregistrer le ou les formation(s)
         for i in range(len(diplome)):
             Formation.objects.create(
@@ -75,10 +100,18 @@ def formation(request):
             )
         return redirect('competence')
     else:
+        if not user_id:
+            return redirect('ajouterPersonne')
+        if not cv:
+            return redirect('description', personnde_id=user_id)
         return render(request, 'cv/formation.html')
     
 
 def experienceProfessionnelle(request):
+    # Reccuperer l'id du cv gardé en session
+    cv = request.session.get("cv_id")
+    user_id = request.session.get("user")
+
     if request.method == "POST":
         periode = request.POST.getlist('periode')
         poste = request.POST.getlist('poste')
@@ -86,8 +119,7 @@ def experienceProfessionnelle(request):
         localite = request.POST.getlist('localite')
         description = request.POST.getlist('description')
         
-        # Reccuperer l'id du cv gardé en session
-        cv = get_object_or_404(Cv, id=request.session.get('cv_id'))
+        cv = get_object_or_404(Cv, id=cv)
 
         # enregistrer le ou les formation(s)
         for i in range(len(periode)):
@@ -101,17 +133,24 @@ def experienceProfessionnelle(request):
             )
         return redirect('langue')
     else:
+        if not user_id:
+            return redirect('ajouterPersonne')
+        if not cv:
+            return redirect('description', personnde_id=user_id)
+        
         return render(request, 'cv/experience_pro.html')
     
 
 def competence(request):
+    # Reccuperer l'id du cv gardé en session
+    cv = request.session.get("cv_id")
+    user_id = request.session.get("user")
+    
     if request.method == "POST":
         competence = request.POST.getlist('competence')
         niveau = request.POST.getlist('niveau')
-        
-        # Reccuperer l'id du cv gardé en session
-        cv = get_object_or_404(Cv, id=request.session.get('cv_id'))
 
+        cv = get_object_or_404(Cv, id=cv)
         # enregistrer le ou les formation(s)
         for i in range(len(niveau)):
             Competence.objects.create(
@@ -121,16 +160,23 @@ def competence(request):
             )
         return redirect('experience_pro')
     else:
+        if not user_id:
+            return redirect('ajouterPersonne')
+        if not cv:
+            return redirect('description', personnde_id=user_id)
         return render(request, 'cv/competence.html')
     
 
 def langue(request):
+    # Reccuperer l'id du cv gardé en session
+    cv = request.session.get("cv_id")
+    user_id = request.session.get("user")
+
     if request.method == "POST":
         langue = request.POST.getlist('langue')
         niveau = request.POST.getlist('niveau')
         
-        # Reccuperer l'id du cv gardé en session
-        cv = get_object_or_404(Cv, id=request.session.get('cv_id'))
+        cv = get_object_or_404(Cv, id=cv)
 
         # enregistrer le ou les formation(s)
         for i in range(len(niveau)):
@@ -141,16 +187,20 @@ def langue(request):
             )
         return redirect('loisirs')
     else:
+        if not user_id:
+            return redirect('ajouterPersonne')
+        if not cv:
+            return redirect('description', personnde_id=user_id)
         return render(request, 'cv/langue.html')
     
 
 def loisirs(request):
+    cv = request.session.get("cv_id")
+    user_id = request.session.get("user")
     if request.method == "POST":
         loisirs = request.POST.getlist('loisirs')
-        
-        # Reccuperer l'id du cv gardé en session
-        cv = get_object_or_404(Cv, id=request.session.get('cv_id'))
 
+        cv = get_object_or_404(Cv, id=cv)
         # enregistrer le ou les formation(s)
         for i in range(len(loisirs)):
             Loisir.objects.create(
@@ -158,22 +208,33 @@ def loisirs(request):
                 cv=cv
         )
         del request.session['cv_id']
+        del request.session['user']
         request.session["slug"] = True
         return redirect('connexion')
+    
     else:
+        if not user_id:
+            return redirect('ajouterPersonne')
+        if not cv:
+            return redirect('description', personnde_id=user_id)
         return render(request, 'cv/loisirs.html')
     
 # gerer la connexion de l'utilisateur
 def connexion(request):
     context = {}
     if request.method == "POST":
-        email = request.POST.getlist('email')
-        password = request.POST.getlist('password')
+        if request.session.get('slug'):
+            del request.session['slug']
+
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
         user = authenticate(email=email, password=password)
-        if user is not None:
+        
+        if user:
             login(request, user)
             # request.session["user"] = user
-            # return redirect('profil')
+            return redirect('profil')
         else:
             context['error'] = True
             return render(request, "utilisateur/connexion.html", context)
@@ -183,6 +244,11 @@ def connexion(request):
             context["slug"] = slug
 
         return render(request, "utilisateur/connexion.html", context)
-    
+
+def deconnexion(request):
+    logout(request)
+    return redirect("connexion")
+
+@login_required
 def profil(request):
-    pass
+    return render(request, "utilisateur/profil/index.html")
