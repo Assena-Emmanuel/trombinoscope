@@ -18,37 +18,31 @@
                 <img src="{% static 'assets/img/default-avatar.png' %}" alt="">
             </div>
             <div class="contact-container">
-                <h2 class="title">Contact Me</h2>
+                <h2 class="title">Contacts</h2>
                 <div class="contact-list">
                     <div class="icon-container">
-                        <i class="bi bi-geo-alt-fill"></i>
+                        <i class="bi bi-telephone-fill"></i>
                     </div>
                     <div class="contact-text">
-                        <p>123 Anywhere St., Any City, ST 12345</p>
+                        <p>{{user.telephone}}</p>
                     </div>
                 </div>
+                
                 <div class="contact-list">
                     <div class="icon-container">
                         <i class="bi bi-envelope-fill"></i>
                     </div>
                     <div class="contact-text">
-                        <p>hello@reallygreatsite.com</p>
+                        <p>{{user.email}}</p>
                     </div>
                 </div>
+                
                 <div class="contact-list">
                     <div class="icon-container">
-                        <i class="bi bi-laptop"></i>
+                        <i class="bi bi-geo-alt-fill"></i>
                     </div>
                     <div class="contact-text">
-                        <p>www.reallygreatsite.com</p>
-                    </div>
-                </div>
-                <div class="contact-list">
-                    <div class="icon-container">
-                        <i class="bi bi-linkedin"></i>
-                    </div>
-                    <div class="contact-text">
-                        <p>@reallygreatsite</p>
+                        <p>{{user.adresse}}</p>
                     </div>
                 </div>
             </div>
@@ -69,40 +63,10 @@
             </div>
 
             <div class="skills-container">
-                <h2 class="title">Skills</h2>
+                <h2 class="title">compétences</h2>
                 <div class="skill">
                     <div class="left-skill">
                         <p>Skill Name 01</p>
-                    </div>
-                    <div class="right-skill">
-                        <div class="outer-layer">
-                            <div class="inner-layer" style="width: 60%;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="skill">
-                    <div class="left-skill">
-                        <p>Skill Name 01</p>
-                    </div>
-                    <div class="right-skill">
-                        <div class="outer-layer">
-                            <div class="inner-layer" style="width: 90%;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="skill">
-                    <div class="left-skill">
-                        <p>Skill Name 02</p>
-                    </div>
-                    <div class="right-skill">
-                        <div class="outer-layer">
-                            <div class="inner-layer" style="width: 40%;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="skill">
-                    <div class="left-skill">
-                        <p>Skill Name 03</p>
                     </div>
                     <div class="right-skill">
                         <div class="outer-layer">
@@ -111,12 +75,13 @@
                     </div>
                 </div>
                 
+                
             </div>
         </div>
         <div class="right-part">
             <div class="banner">
-                <h1 class="firstname">Mariana</h1>
-                <h1 class="lastname">Anderson</h1>
+                <h1 class="firstname">{{user.prenom}}</h1>
+                <h1 class="lastname">{{user.nom|upper}}</h1>
                 <p class="position">Marketing Manager</p>
             </div>
 
@@ -149,22 +114,10 @@
                         dui tristique feugiat. Mauris convallis, mi at mattis malesuada, neque nulla volutpat dolor,
                         hendrerit faucibus eros nibh ut nunc. Proin luctus urna i</p>
                 </div>
-                <div class="work">
-                    <div class="job-date">
-                        <p class="job">Job position here</p>
-                        <p class="date">2019 - 2022</p>
-                    </div>
-                    <h2 class="company-name">Company Name l Location</h2>
-                    <p class="work-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pharetra in
-                        lorem
-                        at laoreet. Donec hendrerit libero eget est tempor, quis tempus arcu elementum. In elementum
-                        elit at
-                        dui tristique feugiat. Mauris convallis, mi at mattis malesuada, neque nulla volutpat dolor,
-                        hendrerit faucibus eros nibh ut nunc. Proin luctus urna i</p>
-                </div>
+                
             </div>
 
-            <!-- <div class="references-container">
+             <div class="references-container"> 
                 <h2 class="title text-left">References</h2>
                 <div class="references">
                     <div class="left-references">
@@ -196,7 +149,7 @@
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div> 
         </div>
     </section>
 

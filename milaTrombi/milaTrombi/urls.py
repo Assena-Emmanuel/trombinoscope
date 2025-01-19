@@ -8,9 +8,10 @@ from django.conf.urls.static import static  # new
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.index, name="index"),
     path('affiche/cv/',views.showCv, name='showCv'),
     path('nouvele-personne/',views.ajouterPersonne, name='ajouterPersonne'),
-    path('description/<int:personnde_id>',views.description, name='description'),
+    path('description/<int:personne_id>',views.description, name='description'),
     path('formation/',views.formation, name='formation'),
     path('competence/',views.competence, name='competence'),
     path('experience-professionnelle/',views.experienceProfessionnelle, name='experience_pro'),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('deconnexion/',views.deconnexion, name='deconnexion'),
     path('profil-user/',views.profil, name='profil'),
     path('user/format-cv',views.selectTemplate, name='format-cv'),
+    path('user/ajouter-cv/<int:numero>',views.ajouterCv, name='ajouter-cv'),
 
 
 

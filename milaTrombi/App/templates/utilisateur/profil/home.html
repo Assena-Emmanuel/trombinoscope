@@ -1,4 +1,5 @@
 {% extends 'utilisateur/profil/base.html' %}
+{% load static %}
 {% block contente %}
 
 
@@ -26,8 +27,8 @@
         <li>
             <i class='bx bxs-calendar-check' ></i>
             <span class="text">
-                <h3>1020</h3>
-                <p>Mes cv</p>
+                <h3>{{ user_cv|length }}</h3>
+                <p>Total CV</p>
             </span>
         </li>
         <li>
@@ -40,8 +41,8 @@
         <li>
             <i class='bx bxs-dollar-circle' ></i>
             <span class="text">
-                <h3>$2543</h3>
-                <p>Total Sales</p>
+                <h3>{{nbIncomplet}}</h3>
+                <p>Total CV Incomplet</p>
             </span>
         </li>
     </ul>
@@ -51,8 +52,6 @@
         <div class="order">
             <div class="head">
                 <h3>Recent Orders</h3>
-                <i class='bx bx-search' ></i>
-                <i class='bx bx-filter' ></i>
             </div>
             <table>
                 <thead>
@@ -60,49 +59,38 @@
                         <th>User</th>
                         <th>Date Order</th>
                         <th>Status</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
+                {% for cv in user_cv %}
                     <tr>
                         <td>
-                            <img src="img/people.png">
-                            <p>John Doe</p>
+                            {% if cv.photo %}
+                                <img src="{{cv.photo.url}}">
+                            {% else %}
+                                <img src="{% static 'assets/img/defaut-avatar.png' %}">
+                            {% endif %}
                         </td>
-                        <td>01-10-2021</td>
-                        <td><span class="status completed">Completed</span></td>
+
+                        {% if cv.poste %}
+                            <td>{{ cv.poste}}</td>
+                        {% else %}
+                            <td><strong>Cv par defaut</strong></td>
+                        {% endif %}
+
+                        {% if cv.terminer %}
+                            <td><span class="status completed">Complet</span></td>
+                            
+                        {% else %}
+                            <td><span class="status process">imcomplet</span></td>
+                            <td><button class="btn btn-outline-warning">
+                                <a href="{% url 'ajouter-cv' numero=cv.modele.id%}" class="text-warning"><i class='bx bx-edit-alt'></i></a>
+                            </button></td>
+                        {% endif %}
                     </tr>
-                    <tr>
-                        <td>
-                            <img src="img/people.png">
-                            <p>John Doe</p>
-                        </td>
-                        <td>01-10-2021</td>
-                        <td><span class="status pending">Pending</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="img/people.png">
-                            <p>John Doe</p>
-                        </td>
-                        <td>01-10-2021</td>
-                        <td><span class="status process">Process</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="img/people.png">
-                            <p>John Doe</p>
-                        </td>
-                        <td>01-10-2021</td>
-                        <td><span class="status pending">Pending</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="img/people.png">
-                            <p>John Doe</p>
-                        </td>
-                        <td>01-10-2021</td>
-                        <td><span class="status completed">Completed</span></td>
-                    </tr>
+                {% endfor %}
+
                 </tbody>
             </table>
         </div>

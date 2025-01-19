@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'cv/personne.css' %}" rel="stylesheet" />
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     
-    <title>{% block title %}Trombinoscope{% endblock %}</title>
+    <title>{% block title %}Trombinoscope | index{% endblock %}</title>
 
     <style>
         *{
@@ -24,6 +25,9 @@ body{
 nav{
     background-color: white;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+    height: 100px;
+    display: flex;
+    align-items: center;
 
     ul{
         width: 100%;
@@ -51,6 +55,8 @@ nav{
     }
 
 }
+
+
 
 .sidebar{
     position: fixed;
@@ -95,7 +101,7 @@ nav{
     </style>
 </head>
 <body>
-    <nav>
+    <nav class="navBar">
         <ul class="sidebar">
             <li onclick="hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26px" viewBox="0 -960 960 960" width="26px" fill="#000000"><path d="m249-207-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"/></svg></a></li>
             <li><a href="">Accueil</a></li>
@@ -103,10 +109,34 @@ nav{
             <li><a href="{% url 'connexion' %}">Se connecter</a></li>
         </ul>
         <ul>
-            <li class=""><a href="">Coding2go</a></li>
-            <li class="hideOnMible"><a href="">Accueil</a></li>
-            <li class="hideOnMible"><a href="{% url 'ajouterPersonne' %}">S'inscrire</a></li>
-            <li class="hideOnMible"><a href="{% url 'connexion' %}">Se connecter</a></li>
+            {% if user.is_authenticated %}
+            <li class="">
+                
+                <button type="button" class="btn btn-outline-primary" style="margin-left: 3em; height: 60px;">
+                    {% if user.photo %}
+                        <img src="{{ user.photo.url }}" alt="User Image" class="rounded-circle" style="width: 40px; height: 40px;">
+                    {% else %}
+                        <img src="{% static 'assets/img/default-avatar.png' %}" alt="" class="rounded-circle me-2" style="width: 30px; height: 30px;">
+                    {% endif %}
+                        <span>{{ user.email }}</span>
+                </button>
+            </li>
+            {% endif %}
+
+            
+            {% if user.is_authenticated %}
+                <li class="hideOnMible">
+                    <a href="{% url 'deconnexion' %}" class="text-danger">
+                        <i class='bx bxs-log-out-circle' ></i>
+                        <span class="text">Deconnecter</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="hideOnMible"><a href=""></a></li>
+                <li class="hideOnMible"><a href="">Accueil</a></li>
+                <li class="hideOnMible"><a href="{% url 'ajouterPersonne' %}">S'inscrire</a></li>
+                <li class="hideOnMible"><a href="{% url 'connexion' %}">Se connecter</a></li>
+            {% endif %}
             <li class="menu-button" onclick="showSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26px" viewBox="0 -960 960 960" width="26px" fill="#000000"><path d="M120-240v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z"/></svg></a></li>
         </ul>
     </nav>

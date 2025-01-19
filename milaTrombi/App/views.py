@@ -1,12 +1,30 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Personne, Cv, Loisir, Competence, ExperienceProfessionnelle, Formation
+from .models import Personne, Cv, Loisir, Competence, ExperienceProfessionnelle, Formation, ModelCv
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 # Create your views here.
 def showCv(request):
     return render(request, 'formatCv/defaut.html')
+
+def index(request):
+    # personnes = Personne.objects.all()
+    data_list = Personne.objects.all()  # Fetch data from your model
+    paginator = Paginator(data_list, 3)  # Show 10 items per page
+
+    page_number = request.GET.get('page')  # Get the page number from the query string
+    try:
+        personne = paginator.page(page_number)
+    except PageNotAnInteger:
+        personne = paginator.page(1)  # If page is not an integer, show the first page
+    except EmptyPage:
+        personne = paginator.page(paginator.num_pages)
+
+
+    return render(request, 'index.html', {'data':personne})
 
 # enregistrer une nouvelle personne
 def ajouterPersonne(request):
@@ -44,11 +62,19 @@ def ajouterPersonne(request):
             personne.set_password(mdp)
             personne.save()
 
+            Cv.objects.create(
+                poste="",
+                description="",
+                photo="",
+                personne=personne,
+                modele=ModelCv.objects.get(numero=0)
+            )
+
             # Connecter automatiquement l'utilisateur
             login(request, personne)
 
             # Redirection après création
-            return redirect('description', personne_id=personne.id)
+            return redirect('profil')
         except Exception as e:
             messages.error(request, f"Une erreur s'est produite : {str(e)}")
             return redirect('ajouterPersonne')
@@ -56,27 +82,47 @@ def ajouterPersonne(request):
     return render(request, 'cv/ajouterPersonne.html')
     
 
-def description(request, personnde_id):
+# def description(request, personnde_id):
+#     if request.method == "POST":
+#         titre = request.POST.get('titre')
+#         description = request.POST.get('description')
+#         personne = get_object_or_404(Personne, id=personnde_id)
+
+#         cv = Cv.objects.create(
+#             poste=titre,
+#             description=description,
+#             personne=personne
+#         )
+
+#         # Garder l'id du cv en session 
+#         request.session["cv_id"] = cv.id
+#         return redirect('formation')
+
+#     else:
+#         user_id = request.session.get("user")
+#         if not user_id:
+#             redirect("ajouterPersonne")
+#         return render(request, 'cv/description.html')
+
+def description(request, personne_id):
     if request.method == "POST":
+        photo = request.POST.get('photo')
         titre = request.POST.get('titre')
         description = request.POST.get('description')
-        personne = get_object_or_404(Personne, id=personnde_id)
+        personne = get_object_or_404(Personne, id=personne_id)
 
         cv = Cv.objects.create(
             poste=titre,
             description=description,
+            photo=photo,
             personne=personne
         )
 
         # Garder l'id du cv en session 
         request.session["cv_id"] = cv.id
-        return redirect('formation')
 
-    else:
-        user_id = request.session.get("user")
-        if not user_id:
-            redirect("ajouterPersonne")
-        return render(request, 'cv/description.html')
+        return JsonResponse({"message": "CV enregistré avec succès", "cv_id": cv.id}, status=200)
+
     
 
 def formation(request):
@@ -232,8 +278,10 @@ def connexion(request):
         user = authenticate(email=email, password=password)
         
         if user:
+
             login(request, user)
             # request.session["user"] = user
+
             return redirect('profil')
         else:
             context['error'] = True
@@ -251,13 +299,20 @@ def deconnexion(request):
 
 @login_required
 def profil(request):
-    return render(request, "utilisateur/profil/home.html")
+    user_cv = Cv.objects.filter(personne=request.user)
+    nbIncomplet = len(user_cv.filter(terminer=False))
+    return render(request, "utilisateur/profil/home.html",{'user_cv':user_cv, 'nbIncomplet':nbIncomplet})
 
 @login_required
 def selectTemplate(request):
-    return render(request, "utilisateur/profil/templateCv/index.html")
+    models = ModelCv.objects.all()
+    return render(request, "utilisateur/profil/templateCv/index.html",{'models':models})
 
+@login_required
+def ajouterCv(request, numero):
+    template_path = f"formatCv/{numero}.html"  # Génération du chemin dynamique
+    return render(request, "utilisateur/profil/templateCv/ajouterCv.html", {'template_path': template_path})
 
 
 def format(request):
-    return render(request, "formatCv/defaut.html")
+    return render(request, "formatCv/1.html")

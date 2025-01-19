@@ -50,16 +50,22 @@ class Personne(AbstractUser):
     photo = models.ImageField(upload_to="photos/")
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nom', 'prenom', 'telephone',]
+    REQUIRED_FIELDS = ['nom', 'prenom', 'telephone','adresse']
 
     # Utiliser notre propre manager
     objects = PersonneManager()
+class ModelCv(models.Model):
+    numero = models.CharField(max_length=5)
+    photo = models.ImageField(upload_to="cv/")
+
 
 class Cv(models.Model):
-    poste = models.CharField(max_length=225)
-    description = models.TextField()
-    photo = models.ImageField(upload_to="cvPhoto/", null=True)
+    poste = models.CharField(max_length=225, default=None)
+    description = models.TextField(default=None)
+    photo = models.ImageField(upload_to="PhotoCv/", null=True)
     personne = models.ForeignKey(Personne, on_delete=models.CASCADE)
+    modele = models.ForeignKey(ModelCv, on_delete=models.CASCADE, default=0)
+    terminer = models.BooleanField(default=False)
 
 class Formation(models.Model):
     cv = models.ForeignKey(Cv, on_delete=models.CASCADE)
@@ -88,3 +94,5 @@ class Competence(models.Model):
     cv = models.ForeignKey(Cv, on_delete=models.CASCADE)
     competence = models.CharField(max_length=255)
     niveau = models.CharField(max_length=50)
+
+
